@@ -58,4 +58,17 @@ class CartController extends Controller
         Cart::where('user_id', $request->user()->id)->where('id', $id)->delete();
         return response()->json(['message' => 'Item removed from cart']);
     }
+
+    public function updateQuantity(Request $request, $id)
+    {
+        $request->validate(['quantity' => 'required|integer|min:1']);
+        
+        // Sesuaikan nama model 'Cart' dengan yang kamu gunakan
+        $cart = \App\Models\Cart::where('id', $id)->where('user_id', auth()->id())->first();
+        
+        if (!$cart) return response()->json(['message' => 'Not found'], 404);
+
+        $cart->update(['quantity' => $request->quantity]);
+        return response()->json(['message' => 'Updated successfully']);
+    }
 }
