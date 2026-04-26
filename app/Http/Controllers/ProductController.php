@@ -75,12 +75,41 @@ class ProductController extends Controller
         ]);
     }
 
-    /**
+   /**
      * Update the specified resource in storage.
      */
     public function update(Request $request, Product $product)
     {
-        //
+        // 1. Validasi data (image dibuat 'nullable' karena saat edit, foto tidak wajib diganti)
+        $request->validate([
+            'name'  => 'required|string|max:255',
+            'price' => 'required|numeric',
+            'stock' => 'required|integer',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048', 
+        ]);
+
+        // 2. Siapkan array data yang akan diupdate
+        $updateData = [
+            'name'  => $request->name,
+            'price' => $request->price,
+            'stock' => $request->stock,
+        ];
+
+        // 3. Jika dosen/asisten upload foto baru, simpan dan timpa path fotonya
+        if ($request->hasFile('image')) {
+            $path = $request->file('image')->store('products', 'public');
+            $updateData['image'] = '/storage/' . $path;
+        }
+
+        // 4. Simpan perubahan ke Database
+        $product->update($updateData);
+
+        // 5. Kembalikan Response JSON Sukses
+        return response()->json([
+            'status'  => 'success',
+            'message' => 'Produk berhasil diperbarui!',
+            'data'    => $product
+        ]);
     }
 
     /**
@@ -88,6 +117,12 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
-        //
+        // Hapus data dari database
+        $product->delete();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Produk berhasil dihapus dari etalase'
+        ]);
     }
 }
