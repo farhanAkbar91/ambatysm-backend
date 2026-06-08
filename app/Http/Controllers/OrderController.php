@@ -45,10 +45,19 @@ class OrderController extends Controller
                     return response()->json(['message' => 'Produk tidak ditemukan'], 404);
                 }
 
-                if ($product->stock < $cart->quantity) {
+                // Lock data stok varian
+                $variantStock = \App\Models\ProductStock::where('product_id', $cart->product_id)
+                    ->where('size', $cart->size)
+                    ->where('color', $cart->color)
+                    ->lockForUpdate()
+                    ->first();
+
+                $availableStock = $variantStock ? $variantStock->stock : 0;
+
+                if ($availableStock < $cart->quantity) {
                     DB::rollBack();
                     return response()->json([
-                        'message' => 'Maaf, stok tidak mencukupi untuk produk: ' . $product->name . '. Sisa stok: ' . $product->stock
+                        'message' => 'Maaf, stok tidak mencukupi untuk produk: ' . $product->name . ' (Ukuran: ' . $cart->size . ', Warna: ' . $cart->color . '). Sisa stok: ' . $availableStock
                     ], 400);
                 }
 
@@ -77,10 +86,18 @@ class OrderController extends Controller
                     'product_id' => $cart->product_id,
                     'quantity' => $cart->quantity,
                     'price' => $product->price, // Snapshot harga saat dibeli
+                    'size' => $cart->size,
+                    'color' => $cart->color,
                 ]);
 
-                // Kurangi stok di database
-                $product->decrement('stock', $cart->quantity);
+                // Kurangi stok varian di database (total stok produk otomatis terupdate)
+                $variantStock = \App\Models\ProductStock::where('product_id', $cart->product_id)
+                    ->where('size', $cart->size)
+                    ->where('color', $cart->color)
+                    ->first();
+                if ($variantStock) {
+                    $variantStock->decrement('stock', $cart->quantity);
+                }
             }
 
             // 4. Kosongkan Keranjang
@@ -163,7 +180,7 @@ class OrderController extends Controller
     public function index(Request $request)
     {
         // Hanya mengambil pesanan milik user yang login
-        $orders = Order::with('items.product')
+        $orders = Order::with(['items.product', 'review'])
             ->where('user_id', $request->user()->id)
             ->latest()
             ->get();

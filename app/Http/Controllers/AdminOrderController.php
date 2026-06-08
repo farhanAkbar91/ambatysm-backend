@@ -11,7 +11,7 @@ class AdminOrderController extends Controller
     public function index()
     {
         // Menarik data order beserta nama pembeli dan detail barangnya
-        $orders = Order::with(['items.product'])->latest()->get();
+        $orders = Order::with(['items.product', 'review'])->latest()->get();
         return response()->json($orders);
     }
 

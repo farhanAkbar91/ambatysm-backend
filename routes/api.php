@@ -8,6 +8,8 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\AdminOrderController;
 use App\Http\Controllers\ShippingController;
+use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\DashboardController;
 
 // --- ROUTE PUBLIK ---
 Route::post('/register', [AuthController::class, 'register']);
@@ -32,6 +34,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/checkout', [OrderController::class, 'checkout']);
     Route::post('/custom-order', [OrderController::class, 'customOrder']);
     Route::post('/orders/{id}/confirm-payment', [OrderController::class, 'confirmPayment']);
+    Route::post('/orders/{id}/review', [ReviewController::class, 'store']);
 
     // Integrasi Ongkir
     Route::get('/shipping/cities', [ShippingController::class, 'getCities']);
@@ -49,4 +52,7 @@ Route::middleware(['auth:sanctum', 'admin'])->group(function () {
     Route::get('/admin/orders', [AdminOrderController::class, 'index']);
     Route::patch('/admin/orders/{id}/status', [AdminOrderController::class, 'updateStatus']);
     Route::patch('/admin/orders/{id}/custom-price', [AdminOrderController::class, 'reviewCustomOrder']);
+
+    // Dashboard
+    Route::get('/admin/dashboard-stats', [DashboardController::class, 'getStats']);
 });

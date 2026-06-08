@@ -15,4 +15,21 @@ class Product extends Model
         'stock',
         'image'
     ];
+
+    public function reviews()
+    {
+        return $this->hasManyThrough(
+            Review::class,
+            OrderItem::class,
+            'product_id', // Foreign key on order_items table...
+            'order_id',   // Foreign key on reviews table...
+            'id',         // Local key on products table...
+            'order_id'    // Local key on order_items table...
+        );
+    }
+
+    public function stocks()
+    {
+        return $this->hasMany(ProductStock::class);
+    }
 }
