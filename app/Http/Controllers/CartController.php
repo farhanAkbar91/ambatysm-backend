@@ -25,21 +25,42 @@ class CartController extends Controller
             'color' => 'nullable|string',
         ]);
 
+        $size = $request->size;
+        $color = $request->color;
+
+        // Auto-resolve jika size atau color kosong (misal ditambah dari beranda)
+        if (empty($size) || empty($color)) {
+            $firstVariant = \App\Models\ProductStock::where('product_id', $request->product_id)
+                ->where('stock', '>', 0)
+                ->first();
+            
+            if (!$firstVariant) {
+                $firstVariant = \App\Models\ProductStock::where('product_id', $request->product_id)->first();
+            }
+
+            if ($firstVariant) {
+                $size = $firstVariant->size;
+                $color = $firstVariant->color;
+            } else {
+                $size = 'All Size';
+                $color = 'Default';
+            }
+        }
+
         $product = \App\Models\Product::find($request->product_id);
     
         $cartItem = Cart::where('user_id', $request->user()->id)
                         ->where('product_id', $request->product_id)
-                        ->where('size', $request->size)
-                        ->where('color', $request->color)
+                        ->where('size', $size)
+                        ->where('color', $color)
                         ->first();
         
-        // Hitung total kuantitas yang diminta (yang sudah ada di keranjang + yang baru ditambahkan)
         $requestedQuantity = $cartItem ? $cartItem->quantity + $request->quantity : $request->quantity;
 
         // Cari stok varian spesifik
         $variantStock = \App\Models\ProductStock::where('product_id', $request->product_id)
-            ->where('size', $request->size)
-            ->where('color', $request->color)
+            ->where('size', $size)
+            ->where('color', $color)
             ->first();
 
         $availableStock = $variantStock ? $variantStock->stock : 0;
@@ -48,8 +69,8 @@ class CartController extends Controller
         if ($requestedQuantity > $availableStock) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Kuantitas melebihi stok ' . ($request->size ?? '') . ' - ' . ($request->color ?? '') . ' yang tersedia (' . $availableStock . ')'
-            ], 400); // 400 Bad Request
+                'message' => 'Kuantitas melebihi stok ' . $size . ' - ' . $color . ' yang tersedia (' . $availableStock . ')'
+            ], 400);
         }
         
         if ($cartItem) {
@@ -59,8 +80,8 @@ class CartController extends Controller
                 'user_id' => $request->user()->id,
                 'product_id' => $request->product_id,
                 'quantity' => $request->quantity,
-                'size' => $request->size,
-                'color' => $request->color
+                'size' => $size,
+                'color' => $color
             ]);
         }
 
