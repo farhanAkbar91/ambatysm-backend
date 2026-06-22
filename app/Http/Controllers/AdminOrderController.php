@@ -19,7 +19,7 @@ class AdminOrderController extends Controller
     public function updateStatus(Request $request, $id)
     {
         $request->validate([
-            'status' => 'required|in:pending,waiting_confirmation,paid,processing,completed,cancelled'
+            'status' => 'required|in:pending,waiting_confirmation,paid,processing,shipped,completed,cancelled'
         ]);
 
         // Ambil data order beserta detail itemnya
