@@ -6,29 +6,27 @@ return [
     |--------------------------------------------------------------------------
     | Cross-Origin Resource Sharing (CORS) Configuration
     |--------------------------------------------------------------------------
-    |
-    | Here you may configure your settings for cross-origin resource sharing
-    | or "CORS". This determines what cross-origin operations may execute
-    | in web browsers. You are free to adjust these settings as needed.
-    |
-    | To learn more: https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS
-    |
     */
 
     'paths' => ['api/*', 'sanctum/csrf-cookie'],
 
-    'allowed_methods' => ['*'], // Mengizinkan semua method (GET, POST, PUT, DELETE, dll)
+    'allowed_methods' => ['*'], 
 
-    'allowed_origins' => ['*'], // Sementara mengizinkan semua domain selama development
+    // Masukkan domain Vercel dan lokal kamu di sini:
+    'allowed_origins' => [
+        'https://ambatysm-frontend-vue.vercel.app',
+        'http://localhost:5173', // Port standar Vite lokal
+        'http://localhost:3000', // Jaga-jaga jika lokal pakai port lain
+    ], 
 
     'allowed_origins_patterns' => [],
 
-    'allowed_headers' => ['*'], // Mengizinkan semua header (Authorization, Content-Type, dll)
+    'allowed_headers' => ['*'], 
 
     'exposed_headers' => [],
 
     'max_age' => 0,
 
-    'supports_credentials' => true, // WAJIB 'true' jika menggunakan Sanctum/Session
+    'supports_credentials' => true, // Tetap 'true' karena domain di atas sudah spesifik
 
 ];
