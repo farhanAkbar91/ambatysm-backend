@@ -47,12 +47,13 @@ class DashboardController extends Controller
         $chartDataPenjualan = array_fill(0, 31, 0);
         $chartDataTransaksi = array_fill(0, 31, 0);
 
+        //  SESUDAH (Gaya PostgreSQL / Supabase)
         if ($bulan !== 'all' && $tahun !== 'all') {
             $ordersInMonth = (clone $query)->select(
-                DB::raw('DAY(created_at) as day'),
+                DB::raw('EXTRACT(DAY FROM created_at) as day'),
                 DB::raw('SUM(total_amount) as total_penjualan'),
                 DB::raw('COUNT(*) as total_transaksi')
-            )->groupBy('day')->get();
+            )->groupBy(DB::raw('EXTRACT(DAY FROM created_at)'))->get();
 
             foreach ($ordersInMonth as $o) {
                 // array index is 0-30 for day 1-31
