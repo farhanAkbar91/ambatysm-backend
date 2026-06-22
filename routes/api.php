@@ -10,6 +10,7 @@ use App\Http\Controllers\AdminOrderController;
 use App\Http\Controllers\ShippingController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\DashboardController;
+use Illuminate\Http\JsonResponse;
 
 // --- ROUTE PUBLIK ---
 Route::post('/register', [AuthController::class, 'register']);
@@ -56,3 +57,10 @@ Route::middleware(['auth:sanctum', 'admin'])->group(function () {
     // Dashboard
     Route::get('/admin/dashboard-stats', [DashboardController::class, 'getStats']);
 });
+
+Route::get('/login', function (): JsonResponse {
+    return response()->json([
+        'success' => false,
+        'message' => 'Unauthenticated. Token dropped or invalid.'
+    ], 401);
+})->name('login');
