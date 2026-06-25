@@ -40,6 +40,7 @@ class DatabaseSeeder extends Seeder
             ProductSeeder::class,
             ProvinceAndCitySeeder::class,
             DummyDataSeeder::class,
+            ProductRatingDummySeeder::class,
         ]);
     }
 }
