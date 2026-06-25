@@ -38,6 +38,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/orders/{id}/review', [ReviewController::class, 'store']);
 
     // Integrasi Ongkir
+    Route::get('/shipping/provinces', [ShippingController::class, 'getProvinces']);
     Route::get('/shipping/cities', [ShippingController::class, 'getCities']);
     Route::post('/shipping/cost', [ShippingController::class, 'checkCost']);
 });

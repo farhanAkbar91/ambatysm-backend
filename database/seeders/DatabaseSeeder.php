@@ -38,6 +38,7 @@ class DatabaseSeeder extends Seeder
         // Run other seeders
         $this->call([
             ProductSeeder::class,
+            ProvinceAndCitySeeder::class,
             DummyDataSeeder::class,
         ]);
     }

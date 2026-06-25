@@ -35,6 +35,7 @@ class DummyDataSeeder extends Seeder
 
         // Ensure we have products
         $products = Product::all();
+        $cities = \App\Models\City::all();
         if ($products->isEmpty()) {
             // Need some dummy products if DB is empty
             for ($i = 1; $i <= 5; $i++) {
@@ -87,7 +88,7 @@ class DummyDataSeeder extends Seeder
                 'type' => 'regular',
                 'status' => $orderStatus,
                 'shipping_address' => "Jalan Dummy No {$i}, Kota Test",
-                'city_id' => '1',
+                'city_id' => $cities->isNotEmpty() ? $cities->random()->id : '1101',
                 'courier' => 'jne',
                 'shipping_cost' => $shippingCost,
                 'created_at' => $randomDate,
