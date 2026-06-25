@@ -75,4 +75,44 @@ class AuthController extends Controller
     {
         return response()->json($request->user());
     }
+
+    public function updateProfile(Request $request)
+    {
+        $user = $request->user();
+
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
+            'phone' => 'nullable|string|max:20',
+            'address' => 'nullable|string',
+            'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
+        $user->name = $validated['name'];
+        $user->email = $validated['email'];
+        $user->phone = $validated['phone'];
+        $user->address = $validated['address'];
+
+        if ($request->hasFile('profile_picture')) {
+            // Delete old picture if exists and is not public default/external url
+            if ($user->profile_picture && !str_starts_with($user->profile_picture, 'http')) {
+                // If path starts with /storage/, strip it to get the raw storage relative path
+                $storedPath = $user->profile_picture;
+                if (str_starts_with($storedPath, '/storage/')) {
+                    $storedPath = substr($storedPath, 9);
+                }
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($storedPath);
+            }
+            $path = $request->file('profile_picture')->store('profiles', 'public');
+            // Store with leading /storage/ so getImageUrl resolves correctly
+            $user->profile_picture = '/storage/' . $path;
+        }
+
+        $user->save();
+
+        return response()->json([
+            'message' => 'Profile updated successfully',
+            'user' => $user
+        ]);
+    }
 }

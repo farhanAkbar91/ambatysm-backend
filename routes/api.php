@@ -21,6 +21,7 @@ Route::get('/products/{product}', [ProductController::class, 'show']); // Semua 
 // --- ROUTE KHUSUS USER LOGIN (Customer & Admin bisa masuk) ---
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', [AuthController::class, 'me']);
+    Route::post('/user/update', [AuthController::class, 'updateProfile']);
     Route::get('/orders', [OrderController::class, 'index']);
     
     Route::post('/logout', [AuthController::class, 'logout']);
