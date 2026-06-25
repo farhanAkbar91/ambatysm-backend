@@ -5,6 +5,8 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use App\Models\Product;
+use App\Models\ProductStock;
 
 class ProductSeeder extends Seeder
 {
@@ -13,272 +15,211 @@ class ProductSeeder extends Seeder
      */
     public function run(): void
     {
-
         $now = Carbon::now();
 
         $products = [
+            // --- TOPS ---
             [
-                'name' => 'Kemeja Putih Polos Pria',
-                'description' => "Kemeja polos lengan panjang warna putih dengan bahan katun premium yang adem dan mudah disetrika. Sangat cocok untuk acara formal maupun kerja sehari-hari.",
-                'price' => 199000,
-                'stock' => 50,
-                'image' => 'https://placehold.co/400x600/eeeeee/31343C?text=Kemeja+Putih',
-                'created_at' => $now,
-                'updated_at' => $now,
+                'name' => 'Oversized Tee',
+                'description' => "Kaos oversized bergaya kasual dengan bahan katun combed premium yang adem dan menyerap keringat. Potongan boxy fit modern yang sangat nyaman digunakan untuk beraktivitas sehari-hari.",
+                'price' => 119000,
+                'stock' => 120,
+                'image' => 'https://www.image2url.com/r2/default/images/1782320248973-aad9eb23-04c6-4817-a683-fd0568efad09.webp',
+                'colors' => ['Hitam', 'Putih', 'Abu-abu', 'Sage Green'],
+                'sizes' => ['S', 'M', 'L', 'XL'],
             ],
             [
-                'name' => 'Jaket Denim Vintage',
-                'description' => "Jaket denim bergaya klasik/vintage dengan aksen washed yang keren. Terbuat dari bahan denim tebal berkualitas tinggi, awet, dan nyaman dipakai cuaca dingin.",
-                'price' => 349000,
-                'stock' => 25,
-                'image' => 'https://placehold.co/400x600/eeeeee/31343C?text=Jaket+Denim',
-                'created_at' => $now,
-                'updated_at' => $now,
+                'name' => 'Fitted Tee',
+                'description' => "Kaos fitted tee dengan potongan pas di badan. Terbuat dari bahan katun stretch lembut yang adem dan nyaman untuk daily wear.",
+                'price' => 99000,
+                'stock' => 90,
+                'image' => 'https://www.image2url.com/r2/default/images/1782321679148-9399ffde-0438-4a31-91af-c173bced748d.webp',
+                'colors' => ['Hitam', 'Putih', 'Navy'],
+                'sizes' => ['S', 'M', 'L', 'XL'],
             ],
             [
-                'name' => 'Kaos Basic Hitam',
-                'description' => "Kaos katun combed 30s premium warna hitam pekat. Potongan regular fit yang santai, menyerap keringat dengan baik, dan tidak mudah melar.",
+                'name' => 'Sleeveless Top',
+                'description' => "Atasan sleeveless kasual tanpa lengan. Sangat cocok sebagai inner blazer, outer, atau langsung dipakai saat cuaca hangat.",
                 'price' => 89000,
-                'stock' => 100,
-                'image' => 'https://placehold.co/400x600/eeeeee/31343C?text=Kaos+Hitam',
-                'created_at' => $now,
-                'updated_at' => $now,
-            ],
-            [
-                'name' => 'Celana Jeans Slim Fit',
-                'description' => "Celana jeans potongan slim fit dengan bahan stretch (melar) yang mengikuti bentuk kaki namun tetap fleksibel bergerak. Warna biru tua klasik.",
-                'price' => 275000,
-                'stock' => 40,
-                'image' => 'https://placehold.co/400x600/eeeeee/31343C?text=Celana+Jeans',
-                'created_at' => $now,
-                'updated_at' => $now,
-            ],
-            [
-                'name' => 'Cardigan Rajut Wanita',
-                'description' => "Cardigan rajut rajutan halus wanita dengan kancing depan. Model oversize yang aesthetic dan hangat untuk gaya kasual sehari-hari.",
-                'price' => 210000,
-                'stock' => 30,
-                'image' => 'https://placehold.co/400x600/eeeeee/31343C?text=Cardigan+Rajut',
-                'created_at' => $now,
-                'updated_at' => $now,
-            ],
-            [
-                'name' => 'Totebag Kanvas Estetik',
-                'description' => "Totebag bahan kanvas tebal dengan penutup resleting dan kantong dalam. Desain minimalis yang cocok untuk kuliah, kerja, maupun belanja santai.",
-                'price' => 65000,
                 'stock' => 80,
-                'image' => 'https://placehold.co/400x600/eeeeee/31343C?text=Totebag+Kanvas',
-                'created_at' => $now,
-                'updated_at' => $now,
+                'image' => 'https://www.image2url.com/r2/default/images/1782321867312-b0d67561-e157-49c5-afa9-76d3674c9e4d.webp',
+                'colors' => ['Putih', 'Hitam', 'Cream'],
+                'sizes' => ['S', 'M', 'L'],
             ],
             [
-                'name' => 'Kemeja Flanel Kotak-kotak',
-                'description' => "Kemeja motif kotak-kotak bahan flanel lembut. Dapat dijadikan kemeja biasa atau sebagai outer kasual. Kombinasi warna merah dan hitam.",
-                'price' => 185000,
-                'stock' => 45,
-                'image' => 'https://placehold.co/400x600/eeeeee/31343C?text=Kemeja+Flanel',
-                'created_at' => $now,
-                'updated_at' => $now,
+                'name' => 'Long sleeve shirt',
+                'description' => "Kemeja lengan panjang polos dengan bahan katun premium. Rapi dan elegan untuk kebutuhan formal, ngantor, maupun semi-formal.",
+                'price' => 199000,
+                'stock' => 75,
+                'image' => 'https://www.image2url.com/r2/default/images/1782320512596-1210b6fd-6e9d-4b75-970b-9dd7a3b26635.webp',
+                'colors' => ['Putih', 'Biru Muda', 'Hitam'],
+                'sizes' => ['M', 'L', 'XL'],
             ],
             [
-                'name' => 'Sneakers Putih Kasual',
-                'description' => "Sepatu sneakers warna putih bersih dengan desain minimalis modern. Dilengkapi sol karet anti-selip dan insole empuk untuk kenyamanan sepanjang hari.",
-                'price' => 450000,
-                'stock' => 20,
-                'image' => 'https://placehold.co/400x600/eeeeee/31343C?text=Sneakers+Putih',
-                'created_at' => $now,
-                'updated_at' => $now,
+                'name' => 'Short sleeve shirt',
+                'description' => "Kemeja lengan pendek kasual santai dari bahan katun berkualitas tinggi. Potongan loose yang sejuk and modis untuk hang out maupun kerja santai.",
+                'price' => 179000,
+                'stock' => 85,
+                'image' => 'https://www.image2url.com/r2/default/images/1782320586504-5f6f4ca3-6169-4baa-ae6d-576c39d73934.webp',
+                'colors' => ['Olive', 'Navy', 'Maroon'],
+                'sizes' => ['M', 'L', 'XL'],
             ],
             [
-                'name' => 'Topi Baseball Hitam',
-                'description' => "Topi baseball warna hitam polos dengan strap pengatur ukuran di belakang. Melindungi kepala dari panas terik sekaligus menambah aksen santai gaya Anda.",
-                'price' => 55000,
+                'name' => 'Basic Hoodie',
+                'description' => "Sweater hoodie lengan panjang dilengkapi tudung serut. Terbuat dari bahan fleece tebal bertekstur lembut dan hangat.",
+                'price' => 249000,
                 'stock' => 60,
-                'image' => 'https://placehold.co/400x600/eeeeee/31343C?text=Topi+Baseball',
-                'created_at' => $now,
-                'updated_at' => $now,
+                'image' => 'https://www.image2url.com/r2/default/images/1782320629644-3167cb32-92af-4cc1-bd5d-fdb7e754e944.webp',
+                'colors' => ['Hitam', 'Abu-abu', 'Navy'],
+                'sizes' => ['M', 'L', 'XL'],
             ],
             [
-                'name' => 'Jam Tangan Minimalis',
-                'description' => "Jam tangan analog pria/wanita dengan tali kulit hitam dan dial putih bersih yang mewah. Tahan percikan air ringan dan sangat elegan.",
-                'price' => 299000,
-                'stock' => 15,
-                'image' => 'https://placehold.co/400x600/eeeeee/31343C?text=Jam+Tangan',
-                'created_at' => $now,
-                'updated_at' => $now,
+                'name' => 'Polo shirt',
+                'description' => "Kaos polo berkerah dengan bahan katun piqué berkualitas. Pilihan tepat untuk gaya kasual yang rapi dan trendi.",
+                'price' => 149000,
+                'stock' => 100,
+                'image' => 'https://www.image2url.com/r2/default/images/1782320733336-88cdfe75-be5a-4958-a434-3490a12b8050.webp',
+                'colors' => ['Navy', 'Hitam', 'Merah'],
+                'sizes' => ['S', 'M', 'L', 'XL'],
             ],
+
+            // --- Outerwear ---
             [
-                'name' => 'Celana Chino Cream',
-                'description' => "Celana panjang model chino warna cream/beige terbuat dari katun twill berkualitas. Nyaman dipakai seharian untuk aktivitas semi-formal dan kasual.",
-                'price' => 195000,
-                'stock' => 35,
-                'image' => 'https://placehold.co/400x600/eeeeee/31343C?text=Celana+Chino',
-                'created_at' => $now,
-                'updated_at' => $now,
-            ],
-            [
-                'name' => 'Sweater Hoodie Abu-abu',
-                'description' => "Sweater hoodie dengan kantong kanguru depan dan penutup kepala serut. Bahan fleece tebal yang sangat hangat namun tidak panas di kulit.",
-                'price' => 225000,
-                'stock' => 50,
-                'image' => 'https://placehold.co/400x600/eeeeee/31343C?text=Sweater+Hoodie',
-                'created_at' => $now,
-                'updated_at' => $now,
-            ],
-            [
-                'name' => 'Kaos Oversized Putih',
-                'description' => "Kaos putih polos dengan potongan oversized/boxy fit yang kekinian. Terbuat dari katun combed 24s yang lebih tebal dan kokoh di tubuh.",
-                'price' => 115000,
-                'stock' => 70,
-                'image' => 'https://placehold.co/400x600/eeeeee/31343C?text=Kaos+Oversized',
-                'created_at' => $now,
-                'updated_at' => $now,
-            ],
-            [
-                'name' => 'Celana Cargo Olive Green',
-                'description' => "Celana panjang kargo warna hijau olive dengan saku samping yang fungsional. Terbuat dari bahan ripstop premium yang kuat untuk petualangan Anda.",
-                'price' => 245000,
-                'stock' => 30,
-                'image' => 'https://placehold.co/400x600/eeeeee/31343C?text=Celana+Cargo',
-                'created_at' => $now,
-                'updated_at' => $now,
-            ],
-            [
-                'name' => 'Jaket Bomber Hitam',
-                'description' => "Jaket bomber warna hitam dengan bahan taslan waterproof ringan dan furing katun yang nyaman. Sangat keren untuk berkendara motor atau outfit malam.",
-                'price' => 389000,
-                'stock' => 20,
-                'image' => 'https://placehold.co/400x600/eeeeee/31343C?text=Jaket+Bomber',
-                'created_at' => $now,
-                'updated_at' => $now,
-            ],
-            [
-                'name' => 'Sepatu Loafers Kulit',
-                'description' => "Sepatu loafers slip-on pria berbahan kulit sintetis premium dengan finishing mengkilap. Cocok dipadukan dengan celana chino atau celana bahan formal.",
-                'price' => 520000,
-                'stock' => 15,
-                'image' => 'https://placehold.co/400x600/eeeeee/31343C?text=Sepatu+Loafers',
-                'created_at' => $now,
-                'updated_at' => $now,
-            ],
-            [
-                'name' => 'Kemeja Batik Modern',
-                'description' => "Kemeja batik lengan pendek bermotif geometris modern dengan warna dasar hitam-emas. Menggunakan bahan katun prima berlapis furing halus.",
-                'price' => 235000,
-                'stock' => 25,
-                'image' => 'https://placehold.co/400x600/eeeeee/31343C?text=Kemeja+Batik',
-                'created_at' => $now,
-                'updated_at' => $now,
-            ],
-            [
-                'name' => 'Celana Pendek Santai',
-                'description' => "Celana pendek kasual santai bahan katun baby terry dengan karet pinggang elastis dan tali serut. Ideal untuk bersantai di rumah atau liburan ke pantai.",
-                'price' => 95000,
-                'stock' => 50,
-                'image' => 'https://placehold.co/400x600/eeeeee/31343C?text=Celana+Pendek',
-                'created_at' => $now,
-                'updated_at' => $now,
-            ],
-            [
-                'name' => 'Hoodie Hitam Minimalis',
-                'description' => "Hoodie warna hitam pekat tanpa motif dengan siluet drop-shoulder yang modis. Bahan katun terry premium berkualitas tinggi.",
-                'price' => 260000,
+                'name' => 'Trucker jacket',
+                'description' => "Jaket model trucker dengan bahan kanvas tangguh yang stylish dan timeless. Dilengkapi saku dada fungsional.",
+                'price' => 329000,
                 'stock' => 40,
-                'image' => 'https://placehold.co/400x600/eeeeee/31343C?text=Hoodie+Hitam',
-                'created_at' => $now,
-                'updated_at' => $now,
+                'image' => 'https://www.image2url.com/r2/default/images/1782321494618-3181e303-0df5-46a1-9d95-2210eb6da5aa.webp',
+                'colors' => ['Khaki', 'Hitam', 'Hijau Army'],
+                'sizes' => ['M', 'L', 'XL'],
             ],
             [
-                'name' => 'Kaos Polo Navy Blue',
-                'description' => "Kaos polo lengan pendek warna biru dongker terbuat dari bahan lacoste katun piqué berpori halus. Sangat rapi namun tetap kasual.",
-                'price' => 135000,
-                'stock' => 60,
-                'image' => 'https://placehold.co/400x600/eeeeee/31343C?text=Kaos+Polo',
-                'created_at' => $now,
-                'updated_at' => $now,
-            ],
-            [
-                'name' => 'Kemeja Oversized Wanita',
-                'description' => "Kemeja oversized wanita lengan panjang dengan potongan loose fit. Terbuat dari bahan linen crinkle yang ringan, jatuh, dan dingin dipakai.",
-                'price' => 180000,
-                'stock' => 35,
-                'image' => 'https://placehold.co/400x600/eeeeee/31343C?text=Kemeja+Oversized',
-                'created_at' => $now,
-                'updated_at' => $now,
-            ],
-            [
-                'name' => 'Celana Kulot Hitam',
-                'description' => "Celana kulot wanita potongan lebar berbahan scuba elastis tebal. Memiliki saku kanan-kiri dan karet pinggang belakang yang nyaman.",
-                'price' => 165000,
+                'name' => 'Bomber shin jacket',
+                'description' => "Jaket bomber bersiluet modern dengan bahan polyester tahan angin. Sangat cocok dipakai saat berkendara malam hari.",
+                'price' => 349000,
                 'stock' => 45,
-                'image' => 'https://placehold.co/400x600/eeeeee/31343C?text=Celana+Kulot',
-                'created_at' => $now,
-                'updated_at' => $now,
+                'image' => 'https://www.image2url.com/r2/default/images/1782321555927-a1ab80cc-66dc-474a-a7df-a2654c2f704b.webp',
+                'colors' => ['Hitam', 'Navy', 'Hijau Army'],
+                'sizes' => ['M', 'L', 'XL'],
             ],
             [
-                'name' => 'Jaket Parka Outdoor',
-                'description' => "Jaket parka pria bermotif militaristik dengan banyak saku luar. Dilengkapi hoodie bongkar-pasang dan bahan luar kanvas drill windbreaker.",
-                'price' => 420000,
-                'stock' => 15,
-                'image' => 'https://placehold.co/400x600/eeeeee/31343C?text=Jaket+Parka',
-                'created_at' => $now,
-                'updated_at' => $now,
-            ],
-            [
-                'name' => 'Sandal Slide Kasual',
-                'description' => "Sandal slide kasual yang enteng dengan sol empuk ergonomis berkontur anatomi kaki. Tahan air dan sangat praktis untuk bepergian santai.",
-                'price' => 120000,
+                'name' => 'Canvas jacket',
+                'description' => "Jaket kasual berbahan canvas berkualitas premium yang tebal dan tahan lama. Desain minimalis namun tetap fungsional.",
+                'price' => 299000,
                 'stock' => 50,
-                'image' => 'https://placehold.co/400x600/eeeeee/31343C?text=Sandal+Slide',
-                'created_at' => $now,
-                'updated_at' => $now,
+                'image' => 'https://www.image2url.com/r2/default/images/1782320804517-f6b5a461-8924-4d92-b7f6-c028a6358bd5.webp',
+                'colors' => ['Cokelat', 'Hitam'],
+                'sizes' => ['M', 'L', 'XL'],
+            ],
+
+            // --- BOTTOMS ---
+            [
+                'name' => 'Short relax pants',
+                'description' => "Celana pendek santai bertali pinggang elastis. Dibuat dari bahan katun baby terry yang adem dan sangat leluasa untuk bergerak.",
+                'price' => 99000,
+                'stock' => 110,
+                'image' => 'https://www.image2url.com/r2/default/images/1782320847062-5b08232e-2d3e-450f-8b6a-7eb78f6eebd3.webp',
+                'colors' => ['Hitam', 'Abu-abu', 'Navy'],
+                'sizes' => ['S', 'M', 'L', 'XL'],
             ],
             [
-                'name' => 'Tas Ransel Waterproof',
-                'description' => "Tas punggung ransel berkapasitas 25 liter dengan kompartemen laptop 15.6 inci berlapis busa pengaman. Bahan luar nylon cordura waterproof.",
-                'price' => 310000,
-                'stock' => 20,
-                'image' => 'https://placehold.co/400x600/eeeeee/31343C?text=Tas+Ransel',
-                'created_at' => $now,
-                'updated_at' => $now,
+                'name' => 'Slim fit jeans',
+                'description' => "Celana panjang denim berpotongan slim fit yang stretchable. Memberikan siluet kaki jenjang dan kenyamanan gerak ekstra.",
+                'price' => 289000,
+                'stock' => 70,
+                'image' => 'https://www.image2url.com/r2/default/images/1782320930969-40dcfa3d-d23a-42c0-a783-ac18c879030c.webp',
+                'colors' => ['Biru Tua', 'Hitam', 'Biru Muda'],
+                'sizes' => ['28', '30', '32', '34'],
+            ],
+            [
+                'name' => 'Regular fit jeans',
+                'description' => "Celana jeans klasik potongan regular fit bermutu tinggi. Tebal, tangguh, dan longgar untuk kebebasan gerak maksimal sehari-hari.",
+                'price' => 279000,
+                'stock' => 65,
+                'image' => 'https://www.image2url.com/r2/default/images/1782321347025-e276b2cb-462a-4084-9c38-ca1680886131.webp',
+                'colors' => ['Biru Tua', 'Hitam'],
+                'sizes' => ['28', '30', '32', '34'],
+            ],
+            [
+                'name' => 'Relax fit pants',
+                'description' => "Celana panjang santai berpotongan lebar (loose fit). Menggunakan bahan linen campuran yang ringan dan sangat adem.",
+                'price' => 199000,
+                'stock' => 80,
+                'image' => 'https://www.image2url.com/r2/default/images/1782320987594-e5f0b05c-9ab4-441b-a148-ce467d672975.webp',
+                'colors' => ['Cream', 'Hitam', 'Abu-abu'],
+                'sizes' => ['S', 'M', 'L', 'XL'],
+            ],
+            [
+                'name' => 'Ankle pants',
+                'description' => "Celana panjang model ankle fit bermotif polos minimalis. Sangat elegan untuk ke kantor maupun dipadukan dengan kaos santai.",
+                'price' => 189000,
+                'stock' => 75,
+                'image' => 'https://www.image2url.com/r2/default/images/1782321107659-134e3e6c-632a-4d5d-9fa4-6ed5e7d348ce.webp',
+                'colors' => ['Hitam', 'Navy', 'Cream'],
+                'sizes' => ['M', 'L', 'XL'],
+            ],
+            [
+                'name' => 'Short chino pants',
+                'description' => "Celana pendek chino bahan katun twill stretch. Modis, trendi, dan memiliki tampilan semi-formal yang praktis.",
+                'price' => 119000,
+                'stock' => 95,
+                'image' => 'https://www.image2url.com/r2/default/images/1782321233715-2fdcdbbc-f78c-4562-955e-9198f9ed76af.webp',
+                'colors' => ['Beige', 'Hitam', 'Navy'],
+                'sizes' => ['28', '30', '32', '34'],
+            ],
+            [
+                'name' => 'Active jogger pants',
+                'description' => "Celana jogger active yang sangat fleksibel dan menyerap keringat. Ideal untuk gym, jogging, maupun hangout kasual.",
+                'price' => 169000,
+                'stock' => 85,
+                'image' => 'https://www.image2url.com/r2/default/images/1782321261781-7865cd68-e2e8-43bd-864b-1fa7bfc2b6a2.webp',
+                'colors' => ['Abu-abu', 'Hitam', 'Navy'],
+                'sizes' => ['S', 'M', 'L', 'XL'],
             ],
         ];
 
+        // Kosongkan tabel produk secara paksa.
+        Product::query()->forceDelete();
+
         foreach ($products as $pData) {
             $stock = $pData['stock'];
+            $colors = $pData['colors'];
+            $sizes = $pData['sizes'];
+            
             unset($pData['stock']);
+            unset($pData['colors']);
+            unset($pData['sizes']);
 
-            $product = \App\Models\Product::create($pData);
+            $pData['created_at'] = $now;
+            $pData['updated_at'] = $now;
 
-            // Bagikan total stock produk ke dalam variasi ukuran dan warna secara dinamis
-            $sizes = ['S', 'M', 'L', 'XL'];
-            $colors = ['Hitam', 'Putih', 'Abu-abu'];
+            $product = Product::create($pData);
 
-            $remainingStock = $stock;
+            // Bagikan total stock produk ke dalam variasi ukuran dan warna secara merata
+            $numVariants = count($sizes) * count($colors);
+            $baseStock = floor($stock / $numVariants);
+            $remainder = $stock % $numVariants;
+
             foreach ($colors as $color) {
                 foreach ($sizes as $size) {
-                    if ($remainingStock <= 0) break 2;
-                    $variantStock = min(rand(5, 15), $remainingStock);
-                    if ($variantStock > 0) {
-                        \App\Models\ProductStock::create([
-                            'product_id' => $product->id,
-                            'size' => $size,
-                            'color' => $color,
-                            'stock' => $variantStock,
-                        ]);
-                        $remainingStock -= $variantStock;
+                    $variantStock = $baseStock;
+                    if ($remainder > 0) {
+                        $variantStock += 1;
+                        $remainder--;
                     }
+
+                    ProductStock::create([
+                        'product_id' => $product->id,
+                        'size' => $size,
+                        'color' => $color,
+                        'stock' => $variantStock,
+                    ]);
                 }
             }
 
-            if ($remainingStock > 0) {
-                \App\Models\ProductStock::create([
-                    'product_id' => $product->id,
-                    'size' => 'M',
-                    'color' => 'Hitam',
-                    'stock' => $remainingStock,
-                ]);
-            }
+            // Perbarui total stock produk secara manual karena model events dinonaktifkan (WithoutModelEvents) saat seeding
+            $product->timestamps = false;
+            $product->update(['stock' => $stock]);
         }
     }
 }
