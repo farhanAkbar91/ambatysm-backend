@@ -9,11 +9,11 @@ class CartController extends Controller
 {
     public function index(Request $request)
     {
-        $cart = Cart::with('product')->where('user_id', $request->user()->id)->get();
+        $cart = Cart::with('product.stocks')->where('user_id', $request->user()->id)->get();
         return response()->json([
-        'status' => 'success',
-        'data' => $cart
-    ]);
+            'status' => 'success',
+            'data' => $cart
+        ]);
     }
 
     public function addToCart(Request $request)
@@ -96,14 +96,61 @@ class CartController extends Controller
 
     public function updateQuantity(Request $request, $id)
     {
-        $request->validate(['quantity' => 'required|integer|min:1']);
+        $request->validate([
+            'quantity' => 'required|integer|min:1',
+            'size' => 'nullable|string',
+            'color' => 'nullable|string',
+        ]);
         
-        // Sesuaikan nama model 'Cart' dengan yang kamu gunakan
         $cart = \App\Models\Cart::where('id', $id)->where('user_id', auth()->id())->first();
         
         if (!$cart) return response()->json(['message' => 'Not found'], 404);
 
-        $cart->update(['quantity' => $request->quantity]);
+        $size = $request->input('size', $cart->size);
+        $color = $request->input('color', $cart->color);
+        $quantity = $request->input('quantity', $cart->quantity);
+
+        // Cari stok varian spesifik
+        $variantStock = \App\Models\ProductStock::where('product_id', $cart->product_id)
+            ->where('size', $size)
+            ->where('color', $color)
+            ->first();
+
+        $availableStock = $variantStock ? $variantStock->stock : 0;
+
+        if ($quantity > $availableStock) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Kuantitas melebihi stok ' . $size . ' - ' . $color . ' yang tersedia (' . $availableStock . ')'
+            ], 400);
+        }
+
+        // Cek apakah ada item lain dengan varian yang sama
+        $existingCartItem = \App\Models\Cart::where('user_id', auth()->id())
+            ->where('product_id', $cart->product_id)
+            ->where('size', $size)
+            ->where('color', $color)
+            ->where('id', '!=', $id)
+            ->first();
+
+        if ($existingCartItem) {
+            $newQuantity = $existingCartItem->quantity + $quantity;
+            if ($newQuantity > $availableStock) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Total kuantitas produk gabungan melebihi stok yang tersedia (' . $availableStock . ')'
+                ], 400);
+            }
+            $existingCartItem->update(['quantity' => $newQuantity]);
+            $cart->delete();
+        } else {
+            $cart->update([
+                'size' => $size,
+                'color' => $color,
+                'quantity' => $quantity,
+            ]);
+        }
+
         return response()->json(['message' => 'Updated successfully']);
     }
 }

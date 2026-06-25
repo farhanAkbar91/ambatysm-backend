@@ -12,9 +12,10 @@ class ProductController extends Controller
      */
     public function index()
     {
-        // Mengambil semua data dari tabel products dengan rata-rata rating dan jumlah ulasan
+        // Mengambil semua data dari tabel products dengan rata-rata rating dan jumlah ulasan beserta variasinya
         $products = \App\Models\Product::withAvg('reviews', 'rating')
             ->withCount('reviews')
+            ->with('stocks')
             ->get(); 
 
         return response()->json([
@@ -31,10 +32,11 @@ class ProductController extends Controller
     {
         // 1. Validasi data yang dikirim dari Frontend
         $request->validate([
-            'name'  => 'required|string|max:255',
-            'price' => 'required|numeric',
-            'stock' => 'nullable|integer',
-            'image' => 'required|image|mimes:jpeg,png,jpg,webp|max:2048', // Maksimal 2MB
+            'name'     => 'required|string|max:255',
+            'category' => 'required|string|max:255',
+            'price'    => 'required|numeric',
+            'stock'    => 'nullable|integer',
+            'image'    => 'required|image|mimes:jpeg,png,jpg,webp|max:2048', // Maksimal 2MB
         ]);
 
         // 2. Proses Upload Gambar
@@ -49,10 +51,11 @@ class ProductController extends Controller
 
         // 3. Simpan Data ke Database
         $product = \App\Models\Product::create([
-            'name'  => $request->name,
-            'price' => $request->price,
-            'stock' => 0, // Akan dihitung dari varian
-            'image' => $imagePath,
+            'name'     => $request->name,
+            'category' => $request->category,
+            'price'    => $request->price,
+            'stock'    => 0, // Akan dihitung dari varian
+            'image'    => $imagePath,
         ]);
 
         // 4. Simpan Varian Stok jika ada
@@ -112,16 +115,18 @@ class ProductController extends Controller
     {
         // 1. Validasi data (image dibuat 'nullable' karena saat edit, foto tidak wajib diganti)
         $request->validate([
-            'name'  => 'required|string|max:255',
-            'price' => 'required|numeric',
-            'stock' => 'nullable|integer',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048', 
+            'name'     => 'required|string|max:255',
+            'category' => 'required|string|max:255',
+            'price'    => 'required|numeric',
+            'stock'    => 'nullable|integer',
+            'image'    => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048', 
         ]);
 
         // 2. Siapkan array data yang akan diupdate
         $updateData = [
-            'name'  => $request->name,
-            'price' => $request->price,
+            'name'     => $request->name,
+            'category' => $request->category,
+            'price'    => $request->price,
         ];
 
         // 3. Jika dosen/asisten upload foto baru, simpan dan timpa path fotonya
