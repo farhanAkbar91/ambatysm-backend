@@ -131,8 +131,7 @@ class OrderController extends Controller
 
         // 2. Cek apakah user mengunggah gambar/desain refrensi
         if ($request->hasFile('custom_image')) {
-            // Simpan file ke folder storage/app/public/custom_orders
-            $imagePath = $request->file('custom_image')->store('custom_orders', 'public');
+            $imagePath = \App\Helpers\ImageUploader::upload($request->file('custom_image'), 'custom_orders');
         }
 
         // 3. Simpan data request ke database
@@ -163,11 +162,11 @@ class OrderController extends Controller
         $order = Order::where('user_id', $request->user()->id)->findOrFail($id);
 
         if ($request->hasFile('payment_proof')) {
-            $path = $request->file('payment_proof')->store('payments', 'public');
+            $imagePath = \App\Helpers\ImageUploader::upload($request->file('payment_proof'), 'payments');
 
             $order->update([
                 'payment_method' => $request->payment_method,
-                'payment_proof' => $path,
+                'payment_proof' => $imagePath,
                 'status' => 'waiting_confirmation'
             ]);
 

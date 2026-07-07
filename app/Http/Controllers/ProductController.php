@@ -42,11 +42,7 @@ class ProductController extends Controller
         // 2. Proses Upload Gambar
         $imagePath = null;
         if ($request->hasFile('image')) {
-            // Simpan file ke folder storage/app/public/products
-            $path = $request->file('image')->store('products', 'public');
-            
-            // Buat URL agar bisa diakses langsung oleh tag <img> di HTML
-            $imagePath = '/storage/' . $path;
+            $imagePath = \App\Helpers\ImageUploader::upload($request->file('image'), 'products');
         }
 
         // 3. Simpan Data ke Database
@@ -131,8 +127,7 @@ class ProductController extends Controller
 
         // 3. Jika dosen/asisten upload foto baru, simpan dan timpa path fotonya
         if ($request->hasFile('image')) {
-            $path = $request->file('image')->store('products', 'public');
-            $updateData['image'] = '/storage/' . $path;
+            $updateData['image'] = \App\Helpers\ImageUploader::upload($request->file('image'), 'products');
         }
 
         // 4. Simpan perubahan ke Database

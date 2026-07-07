@@ -103,9 +103,8 @@ class AuthController extends Controller
                 }
                 \Illuminate\Support\Facades\Storage::disk('public')->delete($storedPath);
             }
-            $path = $request->file('profile_picture')->store('profiles', 'public');
-            // Store with leading /storage/ so getImageUrl resolves correctly
-            $user->profile_picture = '/storage/' . $path;
+            $imagePath = \App\Helpers\ImageUploader::upload($request->file('profile_picture'), 'profiles');
+            $user->profile_picture = $imagePath;
         }
 
         $user->save();
